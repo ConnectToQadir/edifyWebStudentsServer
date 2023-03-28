@@ -52,6 +52,10 @@ app.get("/getStudents",async (req,res)=>{
     res.json(students)
 })
 
+app.get("/",(req,res)=>{
+    res.send("Server is Working")
+})
+
 
 
 
