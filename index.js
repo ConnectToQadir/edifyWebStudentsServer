@@ -65,7 +65,10 @@ app.get("/getStudents",async (req,res)=>{
 
 
 
-mongoose.connect('mongodb://localhost:27017/college').then(()=>console.log("Database Connected!")).catch(()=>console.log("Not Connected!"))
+// mongoose.connect('mongodb://localhost:27017/college').then(()=>console.log("Database Connected!")).catch(()=>console.log("Not Connected!"))
+
+
+mongoose.connect('mongodb+srv://abdullah:abdullah@cluster0.khxrpg0.mongodb.net/college?retryWrites=true&w=majority').then(()=>console.log("Database Connected!")).catch(()=>console.log("Not Connected!"))
 
 app.listen(4600,()=>{
     console.log("Server is Running on Port 4600")
