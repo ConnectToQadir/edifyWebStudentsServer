@@ -48,10 +48,39 @@ app.post("/enrollUser",async (req,res)=>{
 
 
 app.get("/getStudents",async (req,res)=>{
-    var students = await studentsModel.find()
+
+    // Pagination
+    var limit = req.body.limit || 2
+    var page = req.body.page || 1
+    var s = (page - 1) * limit
+
+    var match = {}
+
+    if(req.body.username){
+        match.username = new RegExp(req.body.username,"i")
+    }
+
+
+
+    var students = {}
+    students.data = await studentsModel.find(match).sort({username:1}).limit(limit).skip(s)
+    students.count = await studentsModel.find(match).count()
+
+    // Regex
+    // var students = await studentsModel.find({username:new RegExp("abd","i")}).sort({username:1}).limit(limit).skip(s)
+
+    // Pagination
+    // var students = await studentsModel.find({username:"ali"}).sort({username:1}).limit(limit).skip(s)
+
+    // Project
+    // var students = await studentsModel.findOne({username:req.body.username},{__v:0,username:0})
+
     res.json(students)
 })
 
+
+
+// Test API Server
 app.get("/",(req,res)=>{
     res.send("Server is Working")
 })
@@ -69,10 +98,9 @@ app.get("/",(req,res)=>{
 
 
 
-// mongoose.connect('mongodb://localhost:27017/college').then(()=>console.log("Database Connected!")).catch(()=>console.log("Not Connected!"))
+mongoose.connect('mongodb://localhost:27017/college').then(()=>console.log("Database Connected!")).catch(()=>console.log("Not Connected!"))
 
 
-mongoose.connect('mongodb+srv://abdullah:abdullah@cluster0.khxrpg0.mongodb.net/college?retryWrites=true&w=majority').then(()=>console.log("Database Connected!")).catch(()=>console.log("Not Connected!"))
 
 app.listen(4600,()=>{
     console.log("Server is Running on Port 4600")
