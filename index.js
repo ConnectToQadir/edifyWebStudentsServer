@@ -1,20 +1,12 @@
 const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
+const cors = require('cors')
 
 
 
 app.use(express.json())
-
-
-app.put("/",(req,res)=>{
-    res.send("Node JS Learning in Edify and data updating")
-})
-
-
-app.delete("/",(req,res)=>{
-    res.send("Node JS Learning in Edify and data deleting")
-})
+app.use(cors())
 
 
 // User Model
@@ -35,8 +27,7 @@ const studentsModel = mongoose.model('students',new mongoose.Schema({
 }))
 
 
-app.post("/enrollUser",async (req,res)=>{
-
+app.post("/enrollStudent",async (req,res)=>{
 
     await studentsModel.create({username:req.body.username,password:req.body.password})
 
@@ -50,7 +41,7 @@ app.post("/enrollUser",async (req,res)=>{
 app.get("/getStudents",async (req,res)=>{
 
     // Pagination
-    var limit = req.body.limit || 2
+    var limit = req.body.limit || 10
     var page = req.body.page || 1
     var s = (page - 1) * limit
 
@@ -79,20 +70,23 @@ app.get("/getStudents",async (req,res)=>{
 })
 
 
+app.delete("/delStudent/:id",async (req,res)=>{
+    await studentsModel.findByIdAndDelete(req.params.id)
+    res.send("Student Deleted")
+})
+
+
+app.put('/updateStudent',async(req,res)=>{
+    await studentsModel.updateOne({username:req.query.name},{$set:{username:req.query.newName}})
+    res.send("user updated")
+})
+
+
 
 // Test API Server
 app.get("/",(req,res)=>{
     res.send("Server is Working")
 })
-
-
-
-
-// async function enrollStudent(){
-//     await studentsModel.create({username:"Raza",password:"12345678"})
-// }
-
-// enrollStudent()
 
 
 
